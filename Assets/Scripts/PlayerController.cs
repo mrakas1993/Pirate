@@ -6,11 +6,12 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private float horizontalMove = 0f;
-    
+    public Animator animator;
     private bool facingRight = true;
     [Header("Player Settings")]
     [Range(0,15f)]public float speed = 1f;
     public float jumpForce = 8f;
+
     [Space]
     [Header("Ground Check Settings")]
     public bool isGrounded = false;
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         horizontalMove = Input.GetAxisRaw("Horizontal") * speed;
+        animator.SetFloat("horizontal",Mathf.Abs(horizontalMove));
         if(horizontalMove < 0 && facingRight)
         {
             Flip();
@@ -38,6 +40,14 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
 
+        }
+        if (isGrounded == false)
+        {
+            animator.SetBool("jump", true);
+        }
+        else
+        {
+            animator.SetBool("jump", false);
         }
     }
     private void FixedUpdate()
